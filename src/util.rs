@@ -3,7 +3,7 @@ use std::{fmt, fs};
 
 pub struct DataLine<'a> {
     pub line: &'a str,
-    pub line_number: u64,
+    pub line_number: usize,
 }
 
 impl fmt::Display for DataLine<'_> {
