@@ -114,20 +114,18 @@ where
     Ok(games.collect())
 }
 
-fn draw_is_impossible(draw: &Draw, dice_counts: &DiceCounts) -> bool {
-    draw.iter().any(|(&color, &num_drawn)| {
-        let &num_existing = dice_counts.get(color).unwrap_or(&0);
-        num_drawn > num_existing
-    })
-}
 fn game_is_possible(game: &Game, dice_counts: &DiceCounts) -> bool {
-    !game
-        .draws
-        .iter()
-        .any(|draw| draw_is_impossible(draw, dice_counts))
+    let draw_is_impossible = |draw: &Draw| {
+        draw.iter().any(|(&color, &num_drawn)| {
+            let &num_existing = dice_counts.get(color).unwrap_or(&0);
+            num_drawn > num_existing
+        })
+    };
+
+    !game.draws.iter().any(draw_is_impossible)
 }
 
-fn doit(data: String) -> u64 {
+fn doit(data: &String) -> u64 {
     let mut dice_counts: DiceCounts = HashMap::new();
     dice_counts.insert("red", 12);
     dice_counts.insert("green", 13);
@@ -141,7 +139,7 @@ fn doit(data: String) -> u64 {
         .fold(0u64, |acc, g| acc + g.id)
 }
 
-fn doit2(data: String) -> u64 {
+fn doit2(data: &String) -> u64 {
     let games = parse_games(get_non_empty_lines(&data)).unwrap();
 
     games.iter().fold(0u64, |acc, game| {
@@ -172,29 +170,21 @@ mod tests {
     use super::*;
 
     #[test]
-    fn t1() {
-        let data = read_file_panic("./data/day2/test.txt");
+    fn t() {
+        let data = &read_file_panic("./data/day2/test.txt");
         let answer = doit(data);
-        assert_eq!(answer, 8)
-    }
+        assert_eq!(answer, 8);
 
-    #[test]
-    fn d1() {
-        let data = read_file_panic("./data/day2/data.txt");
-        let answer = doit(data);
-        assert_eq!(answer, 2176)
-    }
-
-    #[test]
-    fn t2() {
-        let data = read_file_panic("./data/day2/test.txt");
         let answer = doit2(data);
         assert_eq!(answer, 2286)
     }
 
     #[test]
-    fn d2() {
-        let data = read_file_panic("./data/day2/data.txt");
+    fn d() {
+        let data = &read_file_panic("./data/day2/data.txt");
+        let answer = doit(data);
+        assert_eq!(answer, 2176);
+
         let answer = doit2(data);
         assert_eq!(answer, 63700)
     }

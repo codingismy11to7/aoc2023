@@ -42,24 +42,21 @@ fn get_first_and_last_as_num(dl: &DataLine, re: &Regex) -> Option<u64> {
     num_str.parse().ok()
 }
 
-fn doit_impl(data: String, re: Regex) -> u64 {
-    get_non_empty_lines(&data).fold(0_u64, |acc, line| {
+fn doit_impl(data: &String, re: Regex) -> u64 {
+    get_non_empty_lines(data).fold(0_u64, |acc, line| {
         acc + get_first_and_last_as_num(&line, &re).unwrap_or_else(|| panic!("{line}"))
     })
 }
 
-fn doit(data: String) -> u64 {
+fn doit(data: &String) -> u64 {
     doit_impl(data, Regex::new(r"\d").unwrap())
 }
 
 fn build_str_num_regex() -> Regex {
-    let mut str = String::from(r"\d|");
-    str.push_str(&NUM_STRS.join("|"));
-
-    Regex::new(&str).unwrap()
+    Regex::new(&format!("\\d|{}", NUM_STRS.join("|"))).unwrap()
 }
 
-fn doit2(data: String) -> u64 {
+fn doit2(data: &String) -> u64 {
     doit_impl(data, build_str_num_regex())
 }
 
@@ -70,28 +67,24 @@ mod tests {
 
     #[test]
     fn t1() {
-        let data = read_file_panic("./data/day1/part1/test.txt");
+        let data = &read_file_panic("./data/day1/part1/test.txt");
         let answer = doit(data);
         assert_eq!(answer, 142)
     }
 
     #[test]
-    fn d1() {
-        let data = read_file_panic("./data/day1/data.txt");
-        let answer = doit(data);
-        assert_eq!(answer, 55002)
-    }
-
-    #[test]
     fn t2() {
-        let data = read_file_panic("./data/day1/part2/test.txt");
+        let data = &read_file_panic("./data/day1/part2/test.txt");
         let answer = doit2(data);
         assert_eq!(answer, 281)
     }
 
     #[test]
-    fn d2() {
-        let data = read_file_panic("./data/day1/data.txt");
+    fn d() {
+        let data = &read_file_panic("./data/day1/data.txt");
+        let answer = doit(data);
+        assert_eq!(answer, 55002);
+
         let answer = doit2(data);
         assert_eq!(answer, 55093)
     }
