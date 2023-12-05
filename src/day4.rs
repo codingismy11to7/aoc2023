@@ -44,19 +44,19 @@ where
     lines.into_iter().map(|line| parse_card(&line)).collect()
 }
 
-fn get_num_matches(card: Card) -> u32 {
+fn get_num_matches(card: &Card) -> u32 {
     let mut winning_nums: HashSet<u64> = HashSet::new();
     card.winning_nums.iter().for_each(|&i| {
         winning_nums.insert(i);
     });
     card.nums_you_have
         .iter()
-        .filter(|&i| winning_nums.contains(i))
+        .filter(|i| winning_nums.contains(i))
         .count() as u32
 }
 
-fn doit(data: &String) -> u64 {
-    let score_card = |card: Card| {
+fn doit(cards: &Vec<Card>) -> u64 {
+    let score_card = |card: &Card| {
         let matches = get_num_matches(card);
 
         if matches == 0 {
@@ -66,16 +66,10 @@ fn doit(data: &String) -> u64 {
         }
     };
 
-    let lines = get_non_empty_lines(data);
-    let cards = parse_cards(lines);
-
-    cards.into_iter().map(score_card).sum()
+    cards.iter().map(score_card).sum()
 }
 
-fn doit2(data: &String) -> u64 {
-    let lines = get_non_empty_lines(data);
-    let cards = parse_cards(lines);
-
+fn doit2(cards: &Vec<Card>) -> u64 {
     let mut id_to_num_owned: HashMap<u64, u64> = HashMap::new();
 
     cards.into_iter().for_each(|card| {
@@ -111,20 +105,26 @@ mod tests {
     #[test]
     fn t() {
         let data = &read_file_panic("./data/day4/test.txt");
-        let answer = doit(data);
+        let lines = get_non_empty_lines(data);
+        let cards = &parse_cards(lines);
+
+        let answer = doit(cards);
         assert_eq!(answer, 13);
 
-        let answer = doit2(data);
+        let answer = doit2(cards);
         assert_eq!(answer, 30)
     }
 
     #[test]
     fn d() {
         let data = &read_file_panic("./data/day4/data.txt");
-        let answer = doit(data);
+        let lines = get_non_empty_lines(data);
+        let cards = &parse_cards(lines);
+
+        let answer = doit(cards);
         assert_eq!(answer, 20407);
 
-        let answer = doit2(data);
+        let answer = doit2(cards);
         assert_eq!(answer, 23806951)
     }
 }
