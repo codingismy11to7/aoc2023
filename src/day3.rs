@@ -1,6 +1,6 @@
 use crate::util::{get_non_empty_lines, DataLine};
 use regex::Regex;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::ops::Range;
 
 #[derive(Debug, Eq, PartialEq, Hash)]
@@ -115,14 +115,14 @@ fn doit2(data: &String) -> u64 {
         line.line.char_indices().for_each(|(idx, char)| {
             if char == '*' {
                 let touching = surrounding_coords(line.line_number, &(idx..idx + 1));
-                let mut parts: HashMap<&PartNum, bool> = HashMap::new();
+                let mut parts: HashSet<&PartNum> = HashSet::new();
                 touching.iter().for_each(|c| {
                     coords_to_pns.get(c).iter().for_each(|pn| {
-                        parts.insert(pn, true);
+                        parts.insert(pn);
                     });
                 });
                 if parts.len() == 2 {
-                    total += parts.keys().fold(1, |acc, pn| acc * pn.num)
+                    total += parts.iter().fold(1, |acc, pn| acc * pn.num)
                 }
             }
         })
