@@ -8,18 +8,17 @@ pub struct DataLine<'a> {
 
 impl fmt::Display for DataLine<'_> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        f.write_str(&format!("Line {}: ", self.line_number))?;
+        f.write_fmt(format_args!("Line {}: ", self.line_number + 1))?;
         f.write_str(self.line)?;
         Ok(())
     }
 }
 
-pub fn get_non_empty_lines<'a>(data: &'a String) -> impl Iterator<Item = DataLine<'a>> {
-    let lines = data.split('\n').filter(|x| !x.is_empty());
-    lines.zip(0..).map(|(line, num)| DataLine {
-        line,
-        line_number: num + 1,
-    })
+pub fn get_non_empty_lines(data: &str) -> impl Iterator<Item = DataLine> {
+    data.split('\n')
+        .filter(|x| !x.is_empty())
+        .zip(0..)
+        .map(|(line, line_number)| DataLine { line, line_number })
 }
 
 pub fn read_file_panic(fname: &str) -> String {

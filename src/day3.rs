@@ -27,7 +27,7 @@ fn surrounding_coords(line_num: usize, indices: &Range<usize>) -> Vec<Coord> {
         (start_idx..end + 1).for_each(|idx| ret.push(Coord { line_num, idx }));
     };
 
-    if line_num > 1 {
+    if line_num > 0 {
         add_above_or_below(line_num - 1);
     }
     add_above_or_below(line_num + 1);
@@ -74,7 +74,7 @@ fn doit(data: &String) -> u64 {
         .collect::<Vec<_>>();
 
     let char_at = |c: &Coord| {
-        let line = two_d_board.get(c.line_num - 1)?;
+        let line = two_d_board.get(c.line_num)?;
         let &char = line.get(c.idx)?;
         Some(char)
     };
