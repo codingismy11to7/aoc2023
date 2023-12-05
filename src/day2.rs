@@ -125,13 +125,11 @@ fn game_is_possible(game: &Game, dice_counts: &DiceCounts) -> bool {
     !game.draws.iter().any(draw_is_impossible)
 }
 
-fn doit(data: &String) -> u64 {
+fn doit(games: &[Game]) -> u64 {
     let mut dice_counts: DiceCounts = HashMap::new();
     dice_counts.insert("red", 12);
     dice_counts.insert("green", 13);
     dice_counts.insert("blue", 14);
-
-    let games = parse_games(get_non_empty_lines(&data)).unwrap();
 
     games
         .iter()
@@ -139,9 +137,7 @@ fn doit(data: &String) -> u64 {
         .fold(0u64, |acc, g| acc + g.id)
 }
 
-fn doit2(data: &String) -> u64 {
-    let games = parse_games(get_non_empty_lines(&data)).unwrap();
-
+fn doit2(games: &[Game]) -> u64 {
     games.iter().fold(0u64, |acc, game| {
         let mut minimums: DiceCounts = HashMap::new();
 
@@ -172,20 +168,24 @@ mod tests {
     #[test]
     fn t() {
         let data = &read_file_panic("./data/day2/test.txt");
-        let answer = doit(data);
+        let games = &parse_games(get_non_empty_lines(data)).unwrap();
+
+        let answer = doit(games);
         assert_eq!(answer, 8);
 
-        let answer = doit2(data);
+        let answer = doit2(games);
         assert_eq!(answer, 2286)
     }
 
     #[test]
     fn d() {
         let data = &read_file_panic("./data/day2/data.txt");
-        let answer = doit(data);
+        let games = &parse_games(get_non_empty_lines(data)).unwrap();
+
+        let answer = doit(games);
         assert_eq!(answer, 2176);
 
-        let answer = doit2(data);
+        let answer = doit2(games);
         assert_eq!(answer, 63700)
     }
 }

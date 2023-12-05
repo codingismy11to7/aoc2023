@@ -1,13 +1,17 @@
 use std::collections::{HashMap, HashSet};
 
-use regex::Regex;
+use regex::{Match, Regex};
 
 use crate::util::{get_non_empty_lines, DataLine};
 
 struct Card {
     id: u64,
     winning_nums: Vec<u64>,
-    nums_you_have: Vec<u64>,
+    nums_you_have: HashSet<u64>,
+}
+
+fn match_to_num(m: Match) -> u64 {
+    m.as_str().parse().unwrap()
 }
 
 fn parse_cards<'a, I>(lines: I) -> Vec<Card>
@@ -17,20 +21,19 @@ where
     let line_re = Regex::new(r"Card\s+(\d+): (.*) \| (.*)").unwrap();
     let nums_re = Regex::new(r"\d+").unwrap();
 
-    let get_nums = |s: &str| {
-        nums_re
-            .find_iter(s)
-            .map(|m| m.as_str().parse::<u64>().unwrap())
-            .collect::<Vec<_>>()
-    };
-
     let parse_card_opt = |line: &DataLine| {
         let caps = line_re.captures(line.line)?;
         let (_, [id, winning, ours]) = caps.extract();
         let id = id.parse().ok()?;
 
-        let winning_nums = get_nums(winning);
-        let nums_you_have = get_nums(ours);
+        let winning_nums = nums_re
+            .find_iter(winning)
+            .map(match_to_num)
+            .collect::<Vec<_>>();
+        let nums_you_have = nums_re
+            .find_iter(ours)
+            .map(match_to_num)
+            .collect::<HashSet<_>>();
 
         Some(Card {
             id,
@@ -45,17 +48,13 @@ where
 }
 
 fn get_num_matches(card: &Card) -> u32 {
-    let mut winning_nums: HashSet<u64> = HashSet::new();
-    card.winning_nums.iter().for_each(|&i| {
-        winning_nums.insert(i);
-    });
     card.nums_you_have
         .iter()
-        .filter(|i| winning_nums.contains(i))
+        .filter(|i| card.winning_nums.contains(i))
         .count() as u32
 }
 
-fn doit(cards: &Vec<Card>) -> u64 {
+fn doit(cards: &[Card]) -> u64 {
     let score_card = |card: &Card| {
         let matches = get_num_matches(card);
 
@@ -69,10 +68,10 @@ fn doit(cards: &Vec<Card>) -> u64 {
     cards.iter().map(score_card).sum()
 }
 
-fn doit2(cards: &Vec<Card>) -> u64 {
+fn doit2(cards: &[Card]) -> u64 {
     let mut id_to_num_owned: HashMap<u64, u64> = HashMap::new();
 
-    cards.into_iter().for_each(|card| {
+    cards.iter().for_each(|card| {
         let id = card.id;
         let num_owned = *id_to_num_owned
             .entry(id)
