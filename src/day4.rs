@@ -2,7 +2,7 @@ use std::collections::{HashMap, HashSet};
 
 use regex::{Match, Regex};
 
-use crate::util::{get_non_empty_lines, DataLine};
+use crate::util::DataLine;
 
 struct Card {
     id: u64,
@@ -97,7 +97,7 @@ fn doit2(cards: &[Card]) -> u64 {
 
 #[cfg(test)]
 mod tests {
-    use crate::util::read_file_panic;
+    use crate::util::{get_non_empty_lines, read_file_panic};
 
     use super::*;
 

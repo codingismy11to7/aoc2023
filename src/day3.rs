@@ -63,7 +63,7 @@ where
     lines.flat_map(part_nums_from_line).collect()
 }
 
-fn doit(data: &String) -> u64 {
+fn doit(data: &str) -> u64 {
     let lines = get_non_empty_lines(data).collect::<Vec<_>>();
 
     let part_nums = part_nums_from_lines(lines.iter());
@@ -91,7 +91,7 @@ fn doit(data: &String) -> u64 {
         .fold(0, |acc, pn| acc + pn.num)
 }
 
-fn doit2(data: &String) -> u64 {
+fn doit2(data: &str) -> u64 {
     let lines = get_non_empty_lines(data).collect::<Vec<_>>();
 
     let part_nums = part_nums_from_lines(lines.iter());

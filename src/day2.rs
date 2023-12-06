@@ -5,7 +5,7 @@ use std::fmt::Formatter;
 
 use regex::Regex;
 
-use crate::util::{get_non_empty_lines, DataLine};
+use crate::util::DataLine;
 
 trait Parse {
     fn game_num_and_rest<'a>(&self, line: &'a str) -> Result<(u64, &'a str), Box<dyn Error>>;
@@ -161,7 +161,7 @@ fn doit2(games: &[Game]) -> u64 {
 
 #[cfg(test)]
 mod tests {
-    use crate::util::read_file_panic;
+    use crate::util::{get_non_empty_lines, read_file_panic};
 
     use super::*;
 
