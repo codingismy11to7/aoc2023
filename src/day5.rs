@@ -6,11 +6,6 @@ use crate::util::get_lines;
 
 type Delta = i64;
 
-#[derive(Clone, Debug, Eq, PartialEq)]
-struct RangeMapEntry {
-    src: u64,
-    dest: u64,
-}
 #[derive(Debug)]
 struct Map<'a> {
     #[allow(dead_code)]
