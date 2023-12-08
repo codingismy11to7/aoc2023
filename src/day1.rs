@@ -69,14 +69,14 @@ mod tests {
     fn t1() {
         let data = &read_file_panic("./data/day1/part1/test.txt");
         let answer = doit(data);
-        assert_eq!(answer, 142)
+        assert_eq!(answer, 142);
     }
 
     #[test]
     fn t2() {
         let data = &read_file_panic("./data/day1/part2/test.txt");
         let answer = doit2(data);
-        assert_eq!(answer, 281)
+        assert_eq!(answer, 281);
     }
 
     #[test]
@@ -86,6 +86,6 @@ mod tests {
         assert_eq!(answer, 55002);
 
         let answer = doit2(data);
-        assert_eq!(answer, 55093)
+        assert_eq!(answer, 55093);
     }
 }
