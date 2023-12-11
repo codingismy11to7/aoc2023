@@ -18,8 +18,8 @@ impl fmt::Display for DataLine<'_> {
 pub fn get_non_empty_lines(data: &str) -> impl Iterator<Item = DataLine> {
     data.split('\n')
         .filter(|x| !x.is_empty())
-        .zip(0..)
-        .map(|(line, line_number)| DataLine { line, line_number })
+        .enumerate()
+        .map(|(line_number, line)| DataLine { line, line_number })
 }
 
 pub fn get_lines(data: &str) -> impl Iterator<Item = DataLine> {
