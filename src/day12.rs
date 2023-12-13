@@ -111,31 +111,31 @@ fn doit2(data: &str) -> u64 {
 
 #[cfg(test)]
 mod tests {
-    use crate::util::read_file_panic;
+    use crate::util::{print_dur, read_file_panic};
 
     use super::*;
 
     #[test]
     fn t1() {
         let data = &read_file_panic("./data/day12/test.txt");
-        let answer = doit(data);
+        let answer = print_dur("test1", || doit(data));
         assert_eq!(answer, 21);
     }
 
     #[test]
     fn t2() {
         let data = &read_file_panic("./data/day12/test.txt");
-        let answer = doit2(data);
+        let answer = print_dur("test2", || doit2(data));
         assert_eq!(answer, 525152);
     }
 
     #[test]
     fn d() {
         let data = &read_file_panic("./data/day12/data.txt");
-        let answer = doit(data);
+        let answer = print_dur("real pt1", || doit(data));
         assert_eq!(answer, 7857);
 
-        let answer = doit2(data);
+        let answer = print_dur("real pt2", || doit2(data));
         assert_eq!(answer, 28606137449920);
     }
 }
